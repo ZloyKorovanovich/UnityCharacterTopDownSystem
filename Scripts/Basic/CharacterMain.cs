@@ -18,6 +18,12 @@ public class CharacterMain : MonoBehaviour, ICharacterComponent
 
     public void Delete()
     {
+        var aimer = GetComponent<CharacterWeaponAimer>();
+        if (aimer)
+        {
+            aimer.RemoveWeapon();
+            Destroy(aimer);
+        }
         Destroy(GetComponent<Animator>());
         Destroy(_characterAttacker);
         Destroy(_characterMover);

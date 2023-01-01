@@ -20,10 +20,7 @@ public class PlayerInput : MonoBehaviour
     private LayerMask _groundLayer;
 
     private Transform _cameraTransform;
-    private CharacterMain _characterSystem;
-
-    private Vector3 _targetPosition;
-    private Vector3 _axisInput;
+    private InputSystem _input;
 
     private void Awake()
     {
@@ -31,16 +28,16 @@ public class PlayerInput : MonoBehaviour
             _characterCamera = Camera.main;
         _cameraTransform = _characterCamera.transform;
 
-        _characterSystem = GetComponent<CharacterMain>();
+        _input = GetComponent<InputSystem>();
     }
 
     private void LateUpdate()
     {
         float angle = transform.eulerAngles.y * Mathf.Deg2Rad;
-        _axisInput = GetAxis(angle);
-
-        _targetPosition = CountTargetPosition(_targetPosition, _targetOffset, _lerpTargetPositionParam, _groundLayer);
-        _characterSystem.SetInput(_axisInput, _targetPosition, Input.GetMouseButtonUp(0));
+        _input.SetAxis(GetAxis(angle));
+        _input.SetAttack(Input.GetMouseButton(0));
+        _input.SetTargetPosition(GetRaycastPosition(_groundLayer));
+        _input.SetInputs();
 
         CountCameraMovement(_cameraTransform, transform, _CameraOffset, out _cameraTransform, _lerpTargetPositionParam);
     }
@@ -58,13 +55,14 @@ public class PlayerInput : MonoBehaviour
         CountedCameraTransform.eulerAngles = eulerAngles;
     }
 
-    private Vector3 CountTargetPosition(Vector3 TargetPosition, Vector3 TargetOffset, float LerpParam, LayerMask GroundLayer)
+    private Vector3 GetRaycastPosition(LayerMask GroundLayer)
     {
+        Vector3 output = Vector3.zero;
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 100f, GroundLayer, QueryTriggerInteraction.Ignore))
-            TargetPosition = Vector3.Lerp(TargetPosition, hit.point + TargetOffset, Time.deltaTime * LerpParam);
-        return TargetPosition;
+            output = hit.point;
+        return output;   
     }
 
     private Vector3 GetAxis(float Angle)

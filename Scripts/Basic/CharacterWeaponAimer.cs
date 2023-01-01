@@ -33,7 +33,8 @@ public class CharacterWeaponAimer : MonoBehaviour
 
     public void RemoveWeapon()
     {
-        _currentWeapon.Drop();
+        if(_currentWeapon)
+            Instantiate(_currentWeapon.WeaponOnGround, _currentWeapon.transform.position, _currentWeapon.transform.rotation);;
         _currentWeapon = null;
         _damage = _absoluteDamage;
     }

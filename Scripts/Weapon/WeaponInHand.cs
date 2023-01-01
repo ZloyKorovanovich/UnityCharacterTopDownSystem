@@ -14,17 +14,12 @@ public class WeaponInHand : MonoBehaviour
     private Vector3 _rotation;
 
     public float Damage => _damage;
+    public GameObject WeaponOnGround => _weaponOnGround;
 
 
     public void SetPosition()
     {
         transform.localPosition = _position;
         transform.localRotation = Quaternion.Euler(_rotation);
-    }
-
-    public void Drop()
-    {
-        Instantiate(_weaponOnGround, transform.position, transform.rotation);
-        Destroy(gameObject);
     }
 }
