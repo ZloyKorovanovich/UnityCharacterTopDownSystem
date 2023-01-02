@@ -35,10 +35,11 @@ public class PlayerInput : MonoBehaviour
     {
         float angle = transform.eulerAngles.y * Mathf.Deg2Rad;
         _input.SetAxis(GetAxis(angle));
-        _input.SetAttack(Input.GetMouseButton(0));
+        _input.SetAttack(Input.GetMouseButtonUp(0));
         _input.SetTargetPosition(GetRaycastPosition(_groundLayer));
         _input.SetInputs();
-
+        if (Input.GetMouseButtonUp(1))
+            _input.PickUp(Camera.main.ScreenPointToRay(Input.mousePosition));
         CountCameraMovement(_cameraTransform, transform, _CameraOffset, out _cameraTransform, _lerpTargetPositionParam);
     }
 

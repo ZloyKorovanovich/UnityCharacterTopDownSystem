@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterMain : MonoBehaviour, ICharacterComponent
+public class CharacterMain : MonoBehaviour
 { 
     private Vector3 _targetPosition;
     private Vector3 _axisInput;
@@ -14,6 +14,7 @@ public class CharacterMain : MonoBehaviour, ICharacterComponent
     private CharacterMover _characterMover;
     private CharacterAttacker _characterAttacker;
     private CharacterDier _characterDier;
+    private CharacterWeaponAimer _characterAimer;
 
 
     public void Delete()
@@ -39,6 +40,7 @@ public class CharacterMain : MonoBehaviour, ICharacterComponent
         _characterMover = GetComponent<CharacterMover>();
         _characterAttacker = GetComponent<CharacterAttacker>();
         _characterDier = GetComponent<CharacterDier>();
+        _characterAimer = GetComponent<CharacterWeaponAimer>();
 
         DisableRagdoll();
     }
@@ -57,6 +59,11 @@ public class CharacterMain : MonoBehaviour, ICharacterComponent
         _axisInput = Axis;
         _targetPosition = Target;
         _isAttack = IsAttack;
+    }
+
+    public void TryPickup(Ray RaycastRay, float MaxDistance)
+    {
+        _characterAimer.TryToPickUp(RaycastRay, MaxDistance);
     }
 
     private void DisableRagdoll()

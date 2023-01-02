@@ -33,15 +33,6 @@ public class CharacterDier : MonoBehaviour
 
     private void Death()
     {
-        DestroyComponents();
-    }
-
-    private void DestroyComponents()
-    {
-        CharacterPart[] parts = GetComponentsInChildren<CharacterPart>();
-        for (int i = 0; i < parts.Length; i++)
-            Destroy(parts[i]);
-        ICharacterComponent component = GetComponent<ICharacterComponent>();
-        component.Delete();
+        GetComponent<InputSystem>().Death();
     }
 }

@@ -21,36 +21,38 @@ public class CharacterWeaponAimer : MonoBehaviour
     private void Awake()
     {
         _damage = _absoluteDamage;
+        if (_currentWeapon)
+            SetWeapon();
     }
 
-    private void Update()
+    private void SetWeapon()
     {
-        if (Input.GetMouseButtonUp(1))
-            TryToPickUp(2);
         if (_currentWeapon)
             _currentWeapon.SetPosition();
+        _damage = _currentWeapon.Damage;
     }
 
     public void RemoveWeapon()
     {
-        if(_currentWeapon)
-            Instantiate(_currentWeapon.WeaponOnGround, _currentWeapon.transform.position, _currentWeapon.transform.rotation);;
+        if (_currentWeapon)
+        {
+            Instantiate(_currentWeapon.WeaponOnGround, _currentWeapon.transform.position, _currentWeapon.transform.rotation);
+            Destroy(_currentWeapon.gameObject);
+        }
         _currentWeapon = null;
         _damage = _absoluteDamage;
     }
 
-    private void TryToPickUp(float MaxDistance)
+    public  void TryToPickUp(Ray PickRay, float MaxDistance)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         WeaponOnGround weapon;
-        if (Physics.Raycast(ray, out hit, 100f, _weaponLayer))
+        if (Physics.Raycast(PickRay, out hit, 100f, _weaponLayer))
             weapon = hit.collider.GetComponent<WeaponOnGround>();
         else
             return;
         _currentWeapon = Instantiate(weapon.PickWeapon(), _rightHand).GetComponent<WeaponInHand>();
-        _currentWeapon.SetPosition();
-        _damage = _currentWeapon.Damage;
+        SetWeapon();
     }
 
 }
