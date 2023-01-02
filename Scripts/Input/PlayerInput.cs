@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviour, InputInterface
 {
     [SerializeField]
     private Camera _characterCamera;
@@ -21,6 +21,12 @@ public class PlayerInput : MonoBehaviour
 
     private Transform _cameraTransform;
     private InputSystem _input;
+
+
+    public void Delete()
+    {
+        Destroy(this);
+    }
 
     private void Awake()
     {

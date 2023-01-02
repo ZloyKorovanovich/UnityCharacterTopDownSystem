@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BotInput : MonoBehaviour
+public class BotInput : MonoBehaviour, InputInterface
 {
     [SerializeField]
     private Transform _player;
@@ -10,6 +10,12 @@ public class BotInput : MonoBehaviour
     private InputSystem _input;
 
     private Vector3 _inputAxis;
+
+
+    public void Delete()
+    {
+        Destroy(this);
+    }
 
     private void Awake()
     {

@@ -16,13 +16,17 @@ public class InputSystem : MonoBehaviour
     private Transform _target;
     private bool _isAttack;
     private Vector3 _axis;
-    
 
-    private void Awake()
+    private InputInterface _inputer;
+
+
+    private void Start()
     {
         if (!_charcterMain)
             _charcterMain = GetComponent<CharacterMain>();
-        _target = Instantiate(new GameObject("Target_" + transform.name), Vector3.zero, Quaternion.Euler(Vector3.zero)).transform;
+        if(!_target)
+            _target = Instantiate(new GameObject("Target_" + transform.name), Vector3.zero, Quaternion.Euler(Vector3.zero)).transform;
+        _inputer = GetComponent<InputInterface>();
     }
 
     public void SetTargetPosition(Vector3 Position)
@@ -59,6 +63,8 @@ public class InputSystem : MonoBehaviour
 
     public void Death()
     {
+        _inputer.Delete();
         _charcterMain.Delete();
+        Destroy(this);
     }
 }

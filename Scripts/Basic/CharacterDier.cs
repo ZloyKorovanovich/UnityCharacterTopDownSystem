@@ -11,15 +11,19 @@ public class CharacterDier : MonoBehaviour
     [SerializeField]
     private string _animHit = "Hit";
 
+    private bool _isDaed = false;
+
     public float Helath => _health;
 
-    public void Awake()
+    private void Awake()
     {
         _anim = GetComponent<Animator>();
     }
 
     public void TakeDamage(float Damage)
     {
+        if (_isDaed)
+            return;
         float health = _health - Damage;
         if(health <= 0)
         {
@@ -33,6 +37,7 @@ public class CharacterDier : MonoBehaviour
 
     private void Death()
     {
+        _isDaed = true;
         GetComponent<InputSystem>().Death();
     }
 }
