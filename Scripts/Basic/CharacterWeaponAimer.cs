@@ -5,14 +5,15 @@ using UnityEngine;
 public class CharacterWeaponAimer : MonoBehaviour
 {
     [SerializeField]
-    private WeaponInHand _currentWeapon;
+    private GameObject _startWeapon;
     [SerializeField]
     private float _absoluteDamage = 10;
     [SerializeField]
     private LayerMask _weaponLayer;
     [SerializeField]
     private Transform _rightHand;
-    
+
+    private WeaponInHand _currentWeapon;
     private float _damage;
 
     public float Damage => _damage;
@@ -21,12 +22,15 @@ public class CharacterWeaponAimer : MonoBehaviour
     private void Awake()
     {
         _damage = _absoluteDamage;
-        if (_currentWeapon)
-            SetWeapon();
+        if (_startWeapon)
+            SetWeapon(_startWeapon);
     }
 
-    private void SetWeapon()
+    private void SetWeapon(GameObject Weapon)
     {
+        if (!Weapon)
+            RemoveWeapon();
+        _currentWeapon = Instantiate(Weapon, _rightHand).GetComponent<WeaponInHand>();
         if (_currentWeapon)
             _currentWeapon.SetPosition();
         _damage = _currentWeapon.Damage;
@@ -51,8 +55,8 @@ public class CharacterWeaponAimer : MonoBehaviour
             weapon = hit.collider.GetComponent<WeaponOnGround>();
         else
             return;
-        _currentWeapon = Instantiate(weapon.PickWeapon(), _rightHand).GetComponent<WeaponInHand>();
-        SetWeapon();
+        RemoveWeapon();
+        SetWeapon(weapon.PickWeapon());
     }
 
 }

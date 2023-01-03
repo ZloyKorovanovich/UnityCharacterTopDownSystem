@@ -13,7 +13,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField]
     private float _pickDistance = 2;
 
-    private Transform _target;
+    private Vector3 _target;
     private bool _isAttack;
     private Vector3 _axis;
 
@@ -24,19 +24,17 @@ public class InputSystem : MonoBehaviour
     {
         if (!_charcterMain)
             _charcterMain = GetComponent<CharacterMain>();
-        if(!_target)
-            _target = Instantiate(new GameObject("Target_" + transform.name), Vector3.zero, Quaternion.Euler(Vector3.zero)).transform;
         _inputer = GetComponent<InputInterface>();
     }
 
     public void SetTargetPosition(Vector3 Position)
     {
-        _target.position = CountTargetPosition(Position, _lerpPositionParametr);
+        _target = CountTargetPosition(Position, _lerpPositionParametr);
     }
 
     private Vector3 CountTargetPosition(Vector3 TargetPosition, float LerpParam)
     {
-        TargetPosition = Vector3.Lerp(_target.position, TargetPosition + _targetOffset, Time.deltaTime * LerpParam);
+        TargetPosition = Vector3.Lerp(_target, TargetPosition + _targetOffset, Time.deltaTime * LerpParam);
         return TargetPosition;
     }
 
@@ -57,7 +55,7 @@ public class InputSystem : MonoBehaviour
 
     public void SetInputs()
     {
-        _charcterMain.SetInput(_axis, _target.position, _isAttack);
+        _charcterMain.SetInput(_axis, _target, _isAttack);
     }
 
 
