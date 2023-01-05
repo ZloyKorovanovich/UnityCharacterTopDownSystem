@@ -26,13 +26,24 @@ public class InputSystem : MonoBehaviour
     public Team TeamSystem => _teamSystem;
     public int Team => _team;
 
-    private void Start()
+
+    private void Awake()
     {
         if (!_charcterMain)
             _charcterMain = GetComponent<CharacterMain>();
         _inputer = GetComponent<InputInterface>();
         if (!_teamSystem)
             _teamSystem = FindObjectOfType<Team>();
+    }
+
+    private void OnEnable()
+    {
+        _teamSystem.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        _teamSystem.Remove(this);
     }
 
     public void SetTargetPosition(Vector3 Position)

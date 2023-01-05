@@ -5,7 +5,7 @@ using UnityEngine;
 public class BotInput : MonoBehaviour, InputInterface
 {
     [SerializeField]
-    private Transform _player;
+    private InputSystem _target;
     [SerializeField]
     private InputSystem _input;
 
@@ -25,11 +25,43 @@ public class BotInput : MonoBehaviour, InputInterface
 
     private void Update()
     {
-        float distance = Vector3.Distance(transform.position, _player.position);
-        _inputAxis.z = distance - 1.5f;
+        if (_target)
+        {
+            FolowTargets();
+            return;
+        }
+        _target = GetTarget();
+        _input.SetAttack(false);
+        _input.SetAxis(Vector3.zero);
+        _input.SetInputs();
+    }
+
+    private InputSystem GetTarget()
+    {
+        float distance;
+        var output = _input.TeamSystem.GetClosestEnemy(transform.position, _input.Team, out distance);
+        if (output)
+            return output;
+        return null;
+    }
+
+    private void FolowTargets()
+    {
+        float distance = Vector3.Distance(transform.position, _target.transform.position);
+        _inputAxis.z = distance - 1f;
+        if(distance < 2.5f)
+        {
+            if(distance > 1)
+            {
+                _input.SetAttack(true);
+            }
+            else
+            {
+                _inputAxis.z = -_inputAxis.z;
+            }
+        }
         _input.SetAxis(_inputAxis);
-        _input.SetAttack(distance < 2.5f);
-        _input.SetTargetPosition(_player.position);
+        _input.SetTargetPosition(_target.transform.position);
         _input.SetInputs();
     }
 }

@@ -31,6 +31,9 @@ public class CharacterMain : MonoBehaviour
         Destroy(_characterDier);
         Destroy(_characterController);
         Destroy(this);
+        CharacterPart[] charParts = GetComponentsInChildren<CharacterPart>();
+        for (int i = 0; i < charParts.Length; i++)
+            Destroy(charParts[i].gameObject);
         EnableRagdoll();
     }
 
@@ -77,7 +80,9 @@ public class CharacterMain : MonoBehaviour
     {
         Rigidbody[] rb = GetComponentsInChildren<Rigidbody>();
         for (int i = 0; i < rb.Length; i++)
+        {
             rb[i].isKinematic = false;
+        }
     }
 
     private void SetAnimator(Vector3 Axis, float DeltaTime, Transform Body, Vector3 Target)
