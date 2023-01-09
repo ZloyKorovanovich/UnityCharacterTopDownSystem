@@ -18,6 +18,8 @@ public class PlayerInput : MonoBehaviour, InputInterface
     private float _lerpTargetPositionParam = 5f;
     [SerializeField]
     private LayerMask _groundLayer;
+    [SerializeField]
+    private SquadBrain _myCommander;
 
     private Transform _cameraTransform;
     private InputSystem _input;
@@ -47,6 +49,18 @@ public class PlayerInput : MonoBehaviour, InputInterface
         if (Input.GetMouseButtonUp(1))
             _input.PickUp(Camera.main.ScreenPointToRay(Input.mousePosition));
         CountCameraMovement(_cameraTransform, transform, _CameraOffset, out _cameraTransform, _lerpTargetPositionParam);
+    }
+
+    private void OnEnable()
+    {
+        if (_myCommander != null)
+            _myCommander.Add(this, true);
+    }
+
+    private void OnDisable()
+    {
+        if (_myCommander != null)
+            _myCommander.Remove(this, true);
     }
 
     private void CountCameraMovement(Transform CameraTransform, Transform BodyTransform, Vector3 CameraOffset, out Transform CountedCameraTransform, float LerpParam)

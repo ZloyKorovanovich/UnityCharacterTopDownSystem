@@ -12,38 +12,19 @@ public class InputSystem : MonoBehaviour
     private float _lerpPositionParametr = 5f;
     [SerializeField]
     private float _pickDistance = 2;
-    [SerializeField]
-    private int _team;
-    [SerializeField]
-    private Team _teamSystem;
 
     private Vector3 _target;
     private bool _isAttack;
     private Vector3 _axis;
 
-    private InputInterface _inputer;
-
-    public Team TeamSystem => _teamSystem;
-    public int Team => _team;
+    private WarriorSystem _inputer;
 
 
     private void Awake()
     {
         if (!_charcterMain)
             _charcterMain = GetComponent<CharacterMain>();
-        _inputer = GetComponent<InputInterface>();
-        if (!_teamSystem)
-            _teamSystem = FindObjectOfType<Team>();
-    }
-
-    private void OnEnable()
-    {
-        _teamSystem.Add(this);
-    }
-
-    private void OnDisable()
-    {
-        _teamSystem.Remove(this);
+        _inputer = GetComponent<WarriorSystem>();
     }
 
     public void SetTargetPosition(Vector3 Position)
