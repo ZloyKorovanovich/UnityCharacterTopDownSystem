@@ -9,9 +9,9 @@ public class CenturionBotInput : MonoBehaviour, SquadBrain
     [SerializeField]
     private float _team;
     [SerializeField]
-    private CenturionBotInput _temporaryEnemySquadField;
+    private CenturionBotInput _enemySquad;
 
-    private List<WarriorSystem> _tragets = new List<WarriorSystem>();
+    private List<WarriorSystem> _targets = new List<WarriorSystem>();
 
     private List<WarriorSystem> _warriors = new List<WarriorSystem>();
     private int _commanderIndex = -1;
@@ -21,7 +21,7 @@ public class CenturionBotInput : MonoBehaviour, SquadBrain
     {
         CheckSquadNumber();
         if (_commanderIndex < 0)
-            _commanderIndex = 1;
+            _commanderIndex = 0;
     }
 
     private void Update()
@@ -29,9 +29,10 @@ public class CenturionBotInput : MonoBehaviour, SquadBrain
         FolowActiveLeader();
     }
 
-    private void FolowActiveLeader()
+
+    public void GetGetMyWarriors(out List<WarriorSystem> WarriorsOutput)
     {
-        transform.position = Vector3.Lerp(transform.position, _warriors[_commanderIndex].transform.position, Time.deltaTime * _speed);
+        WarriorsOutput = _warriors;
     }
 
     public void Add(WarriorSystem I, bool IsCommander)
@@ -45,6 +46,26 @@ public class CenturionBotInput : MonoBehaviour, SquadBrain
         _warriors.Remove(I);
         CheckSquadNumber();
         CheckCommander(IsCommander);
+    }
+
+
+    private void FolowActiveLeader()
+    {
+        transform.position = Vector3.Lerp(transform.position, _warriors[_commanderIndex].transform.position, Time.deltaTime * _speed);
+    }
+
+    private void AssignTargets()
+    {
+        GetEnemyWarriors();
+        SortWarriotsList();
+        SortTargetsList();
+        for(int i = 0; i < _warriors.Count; i++)
+        {
+            int j = i;
+            if (j == _targets.Count)
+                j = _targets.Count - 1;
+            _warriors[i].AssignTarget(_targets[j].GetComponent<InputSystem>());
+        }
     }
 
     private void CheckCommander(bool IsCommander)
@@ -64,33 +85,36 @@ public class CenturionBotInput : MonoBehaviour, SquadBrain
         Destroy(this);
     }
 
-    public void GetGetMyWarriors(out List<WarriorSystem> WarriorsOutput)
-    {
-        WarriorsOutput = _warriors;
-    }
-
     private void GetEnemyWarriors()
     {
-        _temporaryEnemySquadField.GetGetMyWarriors(out _tragets);
+        _enemySquad.GetGetMyWarriors(out _targets);
     }
 
-    public InputSystem GetClosestEnemy(int Team, out float Distance)
+    private void SortWarriotsList()
     {
-        float closestDistanceMagnitude = Mathf.Infinity;
-        float currentMagnitude;
-        InputSystem output = null;
-        for (int i = 0; i < _characters.Count; i++)
+        _warriors = SortObjectsByDistance(_warriors, transform.position);
+    }
+
+    private void SortTargetsList()
+    {
+        _targets = SortObjectsByDistance(_targets, transform.position);
+    }
+
+    private List<WarriorSystem> SortObjectsByDistance(List<WarriorSystem> Warriors, Vector3 Position)
+    {
+        for (int write = 0; write < Warriors.Count; write++)
         {
-            if (_characters[i].Team == Team)
-                continue;
-            currentMagnitude = Vector3.SqrMagnitude(Position - _characters[i].transform.position);
-            if (currentMagnitude <= closestDistanceMagnitude)
+            for (int sort = 0; sort < Warriors.Count - 1; sort++)
             {
-                output = _characters[i];
-                closestDistanceMagnitude = currentMagnitude;
+                if (Vector3.SqrMagnitude(Position - Warriors[sort].transform.position) > Vector3.SqrMagnitude(Position - Warriors[sort + 1].transform.position))
+                {
+                    var temp = Warriors[sort + 1];
+                    Warriors[sort + 1] = Warriors[sort];
+                    Warriors[sort] = temp;
+                }
             }
         }
-        Distance = Mathf.Sqrt(closestDistanceMagnitude);
-        return output;
+
+        return Warriors;
     }
 }

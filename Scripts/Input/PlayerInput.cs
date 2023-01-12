@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour, InputInterface
+public class PlayerInput : MonoBehaviour
 {
     [SerializeField]
     private Camera _characterCamera;
@@ -53,14 +53,14 @@ public class PlayerInput : MonoBehaviour, InputInterface
 
     private void OnEnable()
     {
-        if (_myCommander != null)
-            _myCommander.Add(this, true);
+       // if (_myCommander != null)
+            //_myCommander.Add(this, true);
     }
 
     private void OnDisable()
     {
-        if (_myCommander != null)
-            _myCommander.Remove(this, true);
+        //if (_myCommander != null)
+            // _myCommander.Remove(this, true);
     }
 
     private void CountCameraMovement(Transform CameraTransform, Transform BodyTransform, Vector3 CameraOffset, out Transform CountedCameraTransform, float LerpParam)
