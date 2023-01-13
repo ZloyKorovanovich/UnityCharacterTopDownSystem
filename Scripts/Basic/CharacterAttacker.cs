@@ -24,7 +24,6 @@ public class CharacterAttacker : MonoBehaviour
 
     private Vector3 _direct;
 
-
     private void Awake()
     {
         if (!_aimer)

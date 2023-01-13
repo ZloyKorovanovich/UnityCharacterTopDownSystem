@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CenturionBotInput : MonoBehaviour, SquadBrain
+public class CenturionBotInput : SquadBrain
 {
     [SerializeField]
     private float _speed;
@@ -10,9 +10,11 @@ public class CenturionBotInput : MonoBehaviour, SquadBrain
     private float _team;
     [SerializeField]
     private CenturionBotInput _enemySquad;
+    [SerializeField]
+    private float _radiusSquad = 5;
 
     private List<WarriorSystem> _targets = new List<WarriorSystem>();
-
+    [SerializeField]
     private List<WarriorSystem> _warriors = new List<WarriorSystem>();
     private int _commanderIndex = -1;
 
@@ -22,6 +24,9 @@ public class CenturionBotInput : MonoBehaviour, SquadBrain
         CheckSquadNumber();
         if (_commanderIndex < 0)
             _commanderIndex = 0;
+        if (_enemySquad)
+            ChangeTargets();
+        SetDestinations();
     }
 
     private void Update()
@@ -35,19 +40,41 @@ public class CenturionBotInput : MonoBehaviour, SquadBrain
         WarriorsOutput = _warriors;
     }
 
-    public void Add(WarriorSystem I, bool IsCommander)
+    public void RemoveTarget(WarriorSystem Warrior)
+    {
+        _targets.Remove(Warrior);
+        if (_targets.Count == 0)
+            return;
+        CheckLazyInBattle();
+    }
+
+    public override void Add(WarriorSystem I, bool IsCommander)
     {
         _warriors.Add(I);
         CheckCommander(IsCommander);
     }
 
-    public void Remove(WarriorSystem I, bool IsCommander)
+    public override void Remove(WarriorSystem I, bool IsCommander)
     {
         _warriors.Remove(I);
         CheckSquadNumber();
+        if (_enemySquad)
+            _enemySquad.RemoveTarget(I);
         CheckCommander(IsCommander);
     }
 
+
+    private void SetDestinations()
+    {
+        for(int i = 0; i < _warriors.Count; i++)
+        {
+            float randomDist = Random.Range(0, _radiusSquad);
+            float randomAngle = Random.Range(0, 360);
+            Vector3 randomPos = new Vector3(transform.position.x + randomDist * Mathf.Cos(randomAngle), 0, transform.position.y + randomDist * Mathf.Sin(randomAngle));
+
+            _warriors[i].AssignMovePosition(randomPos);
+        }
+    }
 
     private void FolowActiveLeader()
     {
@@ -62,27 +89,77 @@ public class CenturionBotInput : MonoBehaviour, SquadBrain
         for(int i = 0; i < _warriors.Count; i++)
         {
             int j = i;
-            if (j == _targets.Count)
-                j = _targets.Count - 1;
+            if (j >= _targets.Count)
+                j = Random.Range(0, _targets.Count - 1);
             _warriors[i].AssignTarget(_targets[j].GetComponent<InputSystem>());
+        }
+    }
+
+    private void RemoveTargets()
+    {
+        for (int i = 0; i < _warriors.Count; i++)
+        {
+            _warriors[i].AssignTarget(null);
+        }
+    }
+
+    private void ChangeTargets()
+    {
+        RemoveTargets();
+        AssignTargets();
+    }
+
+    private void CheckLazyInBattle()
+    {
+        bool lazy;
+        for(int i = 0; i < _warriors.Count; i++)
+        {
+            if (!_warriors[i])
+                continue;
+            lazy = _warriors[i].GetLazy();
+            if (lazy)
+                _warriors[i].AssignTarget(GetClosestTarget(_warriors[i].transform.position).GetComponent<InputSystem>());
         }
     }
 
     private void CheckCommander(bool IsCommander)
     {
         if (IsCommander)
-            _commanderIndex = _warriors.Count - 1;
+            _commanderIndex = 0;
     }
 
-    private void CheckSquadNumber()
+    private WarriorSystem GetClosestTarget(Vector3 Position)
+    {
+        if (!_enemySquad)
+            return null;
+        float closestMagnitude = Mathf.Infinity;
+        WarriorSystem closest = null;
+        float currentMagnitude;
+        for(int i = 0; i < _targets.Count; i++)
+        {
+            currentMagnitude = Vector3.SqrMagnitude(Position - _targets[i].transform.position);
+            if(currentMagnitude < closestMagnitude)
+            {
+                closestMagnitude = currentMagnitude;
+                closest = _targets[i];
+            }
+        }
+        return closest;
+    }
+
+    private bool CheckSquadNumber()
     {
         if (_warriors.Count == 0)
+        {
             DestroySquad();
+            return false;
+        }
+        return true;
     }
 
     private void DestroySquad()
     {
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 
     private void GetEnemyWarriors()

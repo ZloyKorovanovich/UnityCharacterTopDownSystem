@@ -32,6 +32,13 @@ public class BotInput : WarriorSystem
     {
         _destination = Position;
     }
+    public override bool GetLazy()
+    {
+        if(_target)
+            return true;
+        return false;
+    }
+
 
     private void Awake()
     {
@@ -65,9 +72,18 @@ public class BotInput : WarriorSystem
     private void FolowDestination()
     {
         float distance = Vector3.Distance(transform.position, _destination);
-        _inputAxis.z = distance - _stoppingDistance;
+        if(distance > 1)
+        {
+            _inputAxis.z = distance - _stoppingDistance;
+            _input.SetTargetPosition(_destination);
+        }
+        else
+        {
+            _input.SetTargetPosition(transform.forward * 3);
+            _inputAxis = Vector3.zero;
+        }
+
         _input.SetAxis(_inputAxis);
-        _input.SetTargetPosition(transform.forward * 3);
         _input.SetInputs();
     }
 
@@ -75,17 +91,18 @@ public class BotInput : WarriorSystem
     {
         float distance = Vector3.Distance(transform.position, _target.transform.position);
         _inputAxis.z = distance - _stoppingDistance;
-        if(distance < 2.5f)
+        if (distance < 2f)
         {
-            if(distance > 1)
-            {
+            if (distance > 1)
                 _input.SetAttack(true);
-            }
             else
             {
+                _input.SetAttack(false);
                 _inputAxis.z = -_inputAxis.z;
             }
         }
+        else
+            _input.SetAttack(false);
         _input.SetAxis(_inputAxis);
         _input.SetTargetPosition(_target.transform.position);
         _input.SetInputs();
