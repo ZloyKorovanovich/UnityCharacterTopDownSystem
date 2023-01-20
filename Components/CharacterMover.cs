@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class CharacterMover
+public class CharacterMover
 {
     //Constant animator parametrs
     private static string _ANIMATOR_VERTICAL = "Vertical";
@@ -8,6 +8,36 @@ public static class CharacterMover
     private static string _ANIMATOR_STATE = "State";
     private static string _ANIMATOR_ROTATION = "Rotation";
     private static string _ANIMATOR_IS_ROTATING = "IsRotating";
+
+    private Animator _animator;
+
+    private float _sensetivity;
+    private float _luft;
+
+    private bool _isRotating;
+
+
+    private CharacterMover(Animator animator)
+    {
+        _animator = animator;
+        _sensetivity = 7f;
+        _luft = 60f;
+    }
+
+    public CharacterMover(Animator animator, float sensetivity, float luft)
+    {
+        _animator = animator;
+        _sensetivity = sensetivity;
+        _luft = luft;
+    }
+
+
+    public void SetMove(Vector3 axis, float deltaTime, Transform body, Vector3 target)
+    {
+        SetAnimatorAxisStats(_animator, axis, deltaTime, _sensetivity);
+        SetMovement(_animator, body, target, axis, deltaTime, _sensetivity, _luft, ref _isRotating);
+    }
+
 
     public static void SetOnPublicMove(Animator animator, Vector3 axis, float deltaTime, Transform body, Vector3 target, ref bool isRotating)
     {
