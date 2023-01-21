@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CharacterAttacker
+public class CharacterAttacker : CharacterComponent
 {
     private static string _ANIMATOR_IS_ATTACK = "IsAttack";
 
@@ -47,7 +47,7 @@ public class CharacterAttacker
     {
         Attack newAttack = owner.AddComponent<Attack>();
         newAttack = attack;
-        animator.SetBool(_ANIMATOR_IS_ATTACK, true);
+        animator.SetTrigger(_ANIMATOR_IS_ATTACK);
         currentAttack = newAttack;
     }
 }

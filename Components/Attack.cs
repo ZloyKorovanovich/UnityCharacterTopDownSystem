@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Attack : MonoBehaviour
+public class Attack : CharacterComponent
 {
     private float _attackLength;
     private float _attackWidth;
@@ -28,17 +28,13 @@ public class Attack : MonoBehaviour
     public void Attacking()
     {
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, _direction, out hit, _attackLength))
+        if(Physics.Raycast(_attackPoint, _direction, out hit, _attackLength, _attackableLayer))
         {
-            Collider[] targets = Physics.OverlapSphere(hit.point, _attackWidth, _attackableLayer);
-            for(int i = 0; i < targets.Length; i++)
+            IDamageble damageble = hit.transform.GetComponent<IDamageble>();
+            if (damageble != null)
             {
-                IDamageble damageble = targets[i].GetComponent<IDamageble>();
-                if (damageble != null)
-                {
-                    float distance = Vector3.Distance(hit.point, targets[i].transform.position);
-                    damageble.TakeDamage(_damage, _attackStrength.Evaluate(1 - (distance / _attackLength)));
-                }
+                float distance = Vector3.Distance(hit.point, _attackPoint);
+                damageble.TakeDamage(_damage, _attackStrength.Evaluate(1 - (distance / _attackLength)));
             }
         }
         Destroy(this);

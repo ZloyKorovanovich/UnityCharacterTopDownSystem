@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CharacterMover
+public class CharacterMover : CharacterComponent
 {
     //Constant animator parametrs
     private static string _ANIMATOR_VERTICAL = "Vertical";
