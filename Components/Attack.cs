@@ -2,22 +2,21 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
-    private const string _ANIMATOR_IS_ATTACK = "IsAttack";
-    private const string _ANIMATOR_ATTACK_STEP = "AttackStep";
-
     private float _attackLength;
     private float _attackWidth;
     private float _damage;
 
     private Vector3 _direction;
+    private Vector3 _attackPoint;
 
     private LayerMask _attackableLayer;
 
     private AnimationCurve _attackStrength;
 
 
-    public Attack(float attackLength, float attackWidth, float damage, Vector3 direction, LayerMask attackableLayer, AnimationCurve attackStrength)
+    public Attack(Vector3 attackPoint, float attackLength, float attackWidth, float damage, Vector3 direction, LayerMask attackableLayer, AnimationCurve attackStrength)
     {
+        _attackPoint = attackPoint;
         _attackLength = attackLength;
         _attackWidth = attackWidth;
         _damage = damage;
@@ -42,5 +41,6 @@ public class Attack : MonoBehaviour
                 }
             }
         }
+        Destroy(this);
     }
 }

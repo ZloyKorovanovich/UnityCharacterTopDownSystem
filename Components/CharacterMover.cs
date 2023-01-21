@@ -39,14 +39,14 @@ public class CharacterMover
     }
 
 
-    public static void SetOnPublicMove(Animator animator, Vector3 axis, float deltaTime, Transform body, Vector3 target, ref bool isRotating)
+    public static void SetPublicMove(Animator animator, Vector3 axis, float deltaTime, Transform body, Vector3 target, ref bool isRotating)
     {
         //Automatic sensetivity and luft
         SetAnimatorAxisStats(animator, axis, deltaTime, 7f);
         SetMovement(animator, body, target, axis, deltaTime, 7f, 60f, ref isRotating);
     }
 
-    public static void SetOnPublicMove(Animator animator, float sensetivity, float luft, Vector3 axis, float deltaTime, Transform body, Vector3 target, ref bool isRotating)
+    public static void SetPublicMove(Animator animator, float sensetivity, float luft, Vector3 axis, float deltaTime, Transform body, Vector3 target, ref bool isRotating)
     {
         //Manual inputs
         SetAnimatorAxisStats(animator, axis, deltaTime, sensetivity);
