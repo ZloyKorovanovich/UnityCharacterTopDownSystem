@@ -5,7 +5,7 @@ using UnityEngine;
 public class WeaponInHand : MonoBehaviour
 {
     [SerializeField]
-    private WeaponOnGround _weaponOnGround;
+    private GameObject _weaponOnGround;
 
     [SerializeField]
     private float _attackLength;
