@@ -5,5 +5,5 @@ using UnityEngine;
 public class WeaponOnGround : MonoBehaviour
 {
     [SerializeField]
-    private WeaponInHand _weaponInHand;
+    private GameObject _weaponInHand;
 }
