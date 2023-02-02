@@ -9,9 +9,10 @@ public class WeaponGetter : MonoBehaviour
     [SerializeField]
     private bool _hand;
 
-    private void Start()
+    private void OnEnable()
     {
         if(_weapon)
             GetComponent<MainComponent>().SetWeapon(_weapon, _hand);
+        Destroy(this);
     }
 }

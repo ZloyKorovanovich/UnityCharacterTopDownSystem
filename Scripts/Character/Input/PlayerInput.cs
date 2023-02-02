@@ -5,16 +5,16 @@ using UnityEngine;
 public class PlayerInput : MainInput
 {
     [SerializeField]
-    private Vector3 _camOffset = new Vector3(0, 10, -2.5f);
+    private Vector3 _cameraOffset = new Vector3(0, 10, -2.5f);
     [SerializeField]
     private Vector3 _targetOffset = new Vector3(0, 1, 0);
 
     private MainComponent _charMain;
 
-    private Camera _camMain;
-    private Transform _camTrans;
+    private Camera _cameraMain;
+    private Transform _cameraTransform;
 
-    private Vector3 _targetPos;
+    private Vector3 _targetPosition;
     private Vector3 _inputAxis;
     private bool _isAttack;
 
@@ -23,8 +23,8 @@ public class PlayerInput : MainInput
     private void Start()
     {
         _charMain = GetComponent<CharacterMain>();
-        _camMain = Camera.main;
-        _camTrans = _camMain.transform;
+        _cameraMain = Camera.main;
+        _cameraTransform = _cameraMain.transform;
     }
 
     private void LateUpdate()
@@ -39,18 +39,23 @@ public class PlayerInput : MainInput
 
         _isAttack = Input.GetMouseButton(0);
 
-        var ray = _camMain.ScreenPointToRay(Input.mousePosition);
+        var ray = _cameraMain.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out _hit, 100f, -1, QueryTriggerInteraction.Ignore))
-            _targetPos = Vector3.Lerp(_targetPos, _hit.point + _targetOffset, Time.deltaTime * 5f);
+            _targetPosition = Vector3.Lerp(_targetPosition, _hit.point + _targetOffset, Time.deltaTime * 5f);
 
-        _charMain.SetInputs(_inputAxis, _targetPos, Input.GetMouseButtonUp(0));
+        _charMain.SetInputs(_inputAxis, _targetPosition, Input.GetMouseButtonUp(0));
 
-        _camTrans.position = Vector3.Lerp(_camTrans.position, transform.position + _camOffset, Time.deltaTime * 5f);
-        var oldRot = _camTrans.eulerAngles;
-        _camTrans.LookAt(transform);
-        oldRot.x = Mathf.LerpAngle(oldRot.x, _camTrans.eulerAngles.x, Time.deltaTime * 5f);
+        CountCameraMovement();
+    }
+
+    private void CountCameraMovement()
+    {
+        _cameraTransform.position = Vector3.Lerp(_cameraTransform.position, transform.position + _cameraOffset, Time.deltaTime * 5f);
+        var oldRot = _cameraTransform.eulerAngles;
+        _cameraTransform.LookAt(transform);
+        oldRot.x = Mathf.LerpAngle(oldRot.x, _cameraTransform.eulerAngles.x, Time.deltaTime * 5f);
         oldRot.y = 0;
         oldRot.z = 0;
-        _camTrans.eulerAngles = oldRot;
+        _cameraTransform.eulerAngles = oldRot;
     }
 }

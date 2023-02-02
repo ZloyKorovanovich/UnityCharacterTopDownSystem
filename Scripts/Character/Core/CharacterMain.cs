@@ -47,12 +47,6 @@ public class CharacterMain : MainComponent, IDamageble
     }
 
 
-    private void OnDisable()
-    {
-        RemoveWeapon();
-    }
-
-
     public override void SetWeapon(GameObject weapon, bool hand)
     {
         RemoveWeapon();
@@ -99,6 +93,9 @@ public class CharacterMain : MainComponent, IDamageble
     {
         bool dead = _health.Damage(_damager.CountDamage(damage, distanceInfluence));
         if (dead)
+        {
+            RemoveWeapon();
             Destroy(_myLife);
+        }
     }
 }
