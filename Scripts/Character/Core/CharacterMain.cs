@@ -11,6 +11,11 @@ public class CharacterMain : MainComponent, IDamageble
     [SerializeField]
     private float _resistancePreview = 1f;
 
+
+    private const string _ANIMATOR_HIT = "Hit";
+    private const string _ANIMATOR_HIT_SPEED = "HitSpeed";
+
+
     private Animator _animator;
     private CharacterController _characterController;
 
@@ -92,6 +97,8 @@ public class CharacterMain : MainComponent, IDamageble
     public void TakeDamage(float damage, float distanceInfluence)
     {
         bool dead = _health.Damage(_damager.CountDamage(damage, distanceInfluence));
+        _animator.SetFloat(_ANIMATOR_HIT_SPEED, 1.5f - distanceInfluence);
+        _animator.SetTrigger(_ANIMATOR_HIT);
         if (dead)
             Death();
     }
