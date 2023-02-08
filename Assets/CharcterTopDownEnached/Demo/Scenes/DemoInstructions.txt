@@ -1,0 +1,14 @@
+Inputs:
+wasd - moving;
+mouse position - character looking at position;
+mouse 0 - attack;
+e - take item from mouse position to the left hand;
+e + mouse 1 - take item from mouse position to the right hand;
+
+Characters:
+green - player - 100 health;
+yellow - enemy - 50 health;
+white - maneken - 1000 health;
+
+Weapons:
+cube weapon - 100 damage;
