@@ -8,14 +8,14 @@ The folowing project includes:
 1.Simple character movement controller.
 2.Combat system with some extantions like evaluating damage by dystance.
 3.Simple weapon system.
-4.Example animations and character from mizamo.com (actually animations are not really good looking, sorry for that, i strongely reccomend to change them.
+4.Example animations and character from mizamo.com (actually animations are not really good looking, sorry for that, i strongely reccomend to change them).
 5.Example Animator Controller.
 6.Demo Scene and example characters prefabs.
 
 There are also a lot of ways for any extentions.
-Hope that will help you in your development.
+I hope, that will help you in your development.
 Do not forget to star this repository and folow my GitHub.
-if there are some problems with instalation or something does not working you can leave a comment or mail me.
+if there are some problems with instalation or something does not working, you can leave a comment or mail me.
 
 short youtube demo: https://youtu.be/ZQipw3AExA8
 
